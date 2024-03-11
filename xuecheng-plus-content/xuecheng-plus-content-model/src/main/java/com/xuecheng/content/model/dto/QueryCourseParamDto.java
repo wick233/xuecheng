@@ -1,10 +1,14 @@
 package com.xuecheng.content.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class QueryCourseParamDto {
 
     //审核状态

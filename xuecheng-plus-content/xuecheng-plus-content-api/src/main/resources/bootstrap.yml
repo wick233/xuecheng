@@ -1,7 +1,7 @@
 server:
   servlet:
     context-path: /content
-  port: 6304
+  port: 53040
 #微服务配置
 spring:
   application:
@@ -12,9 +12,12 @@ spring:
     username: root
     password: mysql
 # 日志文件配置路径
+#logging:
+#  config: classpath:log4j2-dev.xml
 logging:
-  config: classpath:log4j2-dev.xml
-  level: info
+  level:
+    com.xuecheng.content.mapper: DEBUG
+
 swagger:
   title: "学成在线内容管理系统"
   description: "内容系统管理系统对课程相关信息进行管理"
