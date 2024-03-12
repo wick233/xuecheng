@@ -10,12 +10,12 @@ spring:
     password: mysql
 # 日志文件配置路径
 
-#mybatis-plus:
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-logging:
-  level:
-    com.xuecheng.content.mapper: DEBUG
+#logging:
+#  level:
+#    com.xuecheng.content.mapper: DEBUG
   #config: classpath:log4j2-dev.xml
 

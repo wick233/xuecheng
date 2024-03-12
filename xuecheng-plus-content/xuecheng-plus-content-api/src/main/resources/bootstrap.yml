@@ -14,9 +14,9 @@ spring:
 # 日志文件配置路径
 #logging:
 #  config: classpath:log4j2-dev.xml
-logging:
-  level:
-    com.xuecheng.content.mapper: DEBUG
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 swagger:
   title: "学成在线内容管理系统"

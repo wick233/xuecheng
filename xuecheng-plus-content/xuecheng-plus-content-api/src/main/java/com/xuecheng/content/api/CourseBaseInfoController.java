@@ -28,7 +28,7 @@ public class CourseBaseInfoController {
     @ApiOperation("课程查询接口")
     @PostMapping("/course/list")
     public PageResult<CourseBase> list(PageParams pageParams,@RequestBody(required = false) QueryCourseParamDto queryCourseParamDto){
-        PageResult<CourseBase> result = courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParamDto);
-        return result;
+
+        return courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParamDto);
     }
 }

@@ -8,4 +8,8 @@ Content-Type: application/json
   "publishStatus": ""
 }
 
+###查询课程分类
+GET {{content_host}}/content/course-category/tree-nodes
+
+
 <> 2024-03-12T010806.200.json
