@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class CourseCategoryServiceImpl implements CourseCategoryService {
     @Autowired
-    private CourseCategoryMapper courseCategoryMapper;
+    public CourseCategoryMapper courseCategoryMapper;
 
     @Override
     public List<CourseCategoryTreeDto> queryTreeNodes(String id) {
