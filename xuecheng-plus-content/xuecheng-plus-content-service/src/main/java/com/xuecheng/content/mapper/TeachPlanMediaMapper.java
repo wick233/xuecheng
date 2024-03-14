@@ -1,7 +1,7 @@
 package com.xuecheng.content.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xuecheng.content.model.po.TeachplanMedia;
+import com.xuecheng.content.model.po.TeachPlanMedia;
 
 /**
  * <p>
@@ -10,6 +10,6 @@ import com.xuecheng.content.model.po.TeachplanMedia;
  *
  * @author itcast
  */
-public interface TeachplanMediaMapper extends BaseMapper<TeachplanMedia> {
+public interface TeachPlanMediaMapper extends BaseMapper<TeachPlanMedia> {
 
 }
