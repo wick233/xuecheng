@@ -5,16 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
-import com.xuecheng.content.mapper.CourseBaseMapper;
-import com.xuecheng.content.mapper.CourseCategoryMapper;
-import com.xuecheng.content.mapper.CourseMarketMapper;
+import com.xuecheng.content.mapper.*;
 import com.xuecheng.content.model.dto.AddCourseDto;
 import com.xuecheng.content.model.dto.CourseBaseInfoDto;
 import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamDto;
-import com.xuecheng.content.model.po.CourseBase;
-import com.xuecheng.content.model.po.CourseCategory;
-import com.xuecheng.content.model.po.CourseMarket;
+import com.xuecheng.content.model.po.*;
 import com.xuecheng.content.service.CourseBaseInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Mapper;
@@ -26,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 课程信息管理业务接口实现类
@@ -39,6 +36,10 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
     private CourseMarketMapper courseMarketMapper;
     @Autowired
     private CourseCategoryMapper courseCategoryMapper;
+    @Autowired
+    private TeachPlanMapper teachPlanMapper;
+    @Autowired
+    private CourseTeacherMapper courseTeacherMapper;
 
     @Override
     public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamDto queryCourseParamDto) {
@@ -110,6 +111,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //封装基本信息并更新到数据库
         BeanUtils.copyProperties(dto,courseBase);
         courseBase.setChangeDate(LocalDateTime.now());
+        courseBaseMapper.updateById(courseBase);
 
         //封装营销信息并更新到数据库
         CourseMarket courseMarket = new CourseMarket();
@@ -117,6 +119,21 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         saveCourseMarket(courseMarket);
 
         return getCourseBaseById(courseId);
+    }
+
+    @Override
+    public void deleteCourse(Long companyId, Long courseId) {
+        CourseBase courseBase = courseBaseMapper.selectById(courseId);
+        if (!Objects.equals(companyId, courseBase.getCompanyId())) XueChengPlusException.cast("权限不足！");
+        else{
+            if (!"202002".equals(courseBase.getAuditStatus())) {
+                XueChengPlusException.cast("课程信息已提交，删除失败！");
+            }
+            courseBaseMapper.deleteById(courseId);
+            courseMarketMapper.deleteById(courseId);
+            teachPlanMapper.delete(new LambdaQueryWrapper<TeachPlan>().eq(TeachPlan::getCourseId,courseId));
+            courseTeacherMapper.delete(new LambdaQueryWrapper<CourseTeacher>().eq(CourseTeacher::getCourseId,courseId));
+        }
     }
 
     private int saveCourseMarket(CourseMarket courseMarket) {

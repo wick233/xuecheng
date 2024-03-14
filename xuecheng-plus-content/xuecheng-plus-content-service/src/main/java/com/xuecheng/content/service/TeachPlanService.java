@@ -9,4 +9,10 @@ public interface TeachPlanService {
     List<TeachPlanDto> findTeachPlanTree(Long courseId);
 
     void saveTeachPlan(SaveTeachPlanDto dto);
+
+    void deleteTeachPlan(Long teachPlanId);
+
+    void moveUpTeachPlan(Long teachPlanId);
+
+    void moveDownTeachPlan(Long teachPlanId);
 }
