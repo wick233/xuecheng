@@ -3,8 +3,11 @@ package com.xuecheng.media.service;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.media.model.dto.QueryMediaParamsDto;
+import com.xuecheng.media.model.dto.UploadFileParamsDto;
+import com.xuecheng.media.model.dto.UploadFileResultDto;
 import com.xuecheng.media.model.po.MediaFiles;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,7 +27,16 @@ public interface MediaFileService {
   * @author Mr.M
   * @date 2022/9/10 8:57
  */
- public PageResult<MediaFiles> queryMediaFiels(Long companyId,PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
+ PageResult<MediaFiles> queryMediaFiles(Long companyId,PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
 
+ UploadFileResultDto upload(Long companyId, UploadFileParamsDto uploadFileParamsDto,String localFilePath);
 
+ /**
+  * UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder()
+  *                 .bucket("testbucket")//桶名
+  *                 .filename("D:\\Download\\two.jpg")//本地文件名
+  *                 .object("test/01/two.jpg")//文件系统对象名
+  *                 .contentType(mimeType)//设置媒体文件类型
+  *                 .build();
+  */
 }
