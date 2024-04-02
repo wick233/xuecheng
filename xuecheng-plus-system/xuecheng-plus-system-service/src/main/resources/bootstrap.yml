@@ -1,6 +1,7 @@
+#
 #spring:
 #  application:
-#    name: media-service
+#    name: system-service
 #  cloud:
 #    nacos:
 #      server-addr: 192.168.101.65:8848
@@ -20,6 +21,5 @@
 ##profiles默认为dev
 #  profiles:
 #    active: dev
-#
 #
 #

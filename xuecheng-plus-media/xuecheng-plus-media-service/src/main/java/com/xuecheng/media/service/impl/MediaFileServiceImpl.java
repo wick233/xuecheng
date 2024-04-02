@@ -135,7 +135,6 @@ public class MediaFileServiceImpl implements MediaFileService {
         return mediaFiles;
     }
 
-    @Transactional
     @Override
     public UploadFileResultDto upload(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath) {
         File file = new File(localFilePath);
