@@ -31,6 +31,8 @@ public interface MediaFileService {
 
  UploadFileResultDto upload(Long companyId, UploadFileParamsDto uploadFileParamsDto,String localFilePath);
 
+ MediaFiles addMediaFilesToDatabase(Long companyId, String fileMd5, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName);
+
  /**
   * UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder()
   *                 .bucket("testbucket")//桶名

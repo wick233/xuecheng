@@ -53,6 +53,9 @@ public class MediaFileServiceImpl implements MediaFileService {
     @Autowired
     MediaFilesMapper mediaFilesMapper;
 
+    @Autowired
+    MediaFileService proxyService;
+
     @Value("${minio.bucket.files}")
     private String bucketFiles;
 
@@ -152,7 +155,7 @@ public class MediaFileServiceImpl implements MediaFileService {
         uploadFileParamsDto.setFileSize(file.length());
 
         //文件信息存入数据库
-        MediaFiles mediaFiles = addMediaFilesToDatabase(companyId, fileMd5, uploadFileParamsDto, bucketFiles, objectName);
+        MediaFiles mediaFiles = proxyService.addMediaFilesToDatabase(companyId, fileMd5, uploadFileParamsDto, bucketFiles, objectName);
         UploadFileResultDto uploadFileResultDto = new UploadFileResultDto();
         BeanUtils.copyProperties(mediaFiles,uploadFileResultDto);
         return uploadFileResultDto;
