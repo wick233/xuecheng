@@ -13,6 +13,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description 测试minIO的sdk
@@ -71,6 +73,40 @@ public class MinIOTest {
         if (target_md5.equals(source_md5)){
             System.out.println("下载成功");
         }
+    }
+
+    //分块文件上传到Minio
+    @Test
+    void uploadChunk() throws Exception {
+        for (int i = 0; i < 22; i++) {
+            UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder()
+                    .bucket("testbucket")//桶名
+                    .filename("D:\\Test\\chunk\\"+i)//本地文件名
+                    .object("chunk/"+i)//文件系统对象名
+                    .build();
+
+            minioClient.uploadObject(uploadObjectArgs);
+            System.out.println("上传分块成功"+i);
+        }
+    }
+
+    //调用minio接口合并分块
+    @Test
+    void testMerge() throws Exception{
+        List<ComposeSource> sources = new ArrayList<>();
+        for (int i = 0; i < 22; i++) {
+            ComposeSource source = ComposeSource.builder().bucket("testbucket").object("chunk/" + i).build();
+            sources.add(source);
+        }
+
+        ComposeObjectArgs composeObjectArgs = ComposeObjectArgs.builder()
+                .bucket("testbucket")
+                .object("merge01.mp4")
+                .sources(sources)
+                .build();
+
+        minioClient.composeObject(composeObjectArgs);
+
     }
 
 }

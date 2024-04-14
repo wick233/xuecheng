@@ -23,7 +23,7 @@ public class BigFileTest {
         //分块文件存储路径
         String chunkFilePath = "D:\\Test\\chunk\\";
         //分块大小 数量
-        int chunkSize = 1024 * 1024 *1;
+        int chunkSize = 1024 * 1024 *5;
         int chunkNum = (int) Math.ceil(sourceFile.length() * 1.0 / chunkSize);
 
         //使用流从源文件读数据，向分块文件写数据

@@ -2,6 +2,7 @@ package com.xuecheng.media.service;
 
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
+import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.media.model.dto.QueryMediaParamsDto;
 import com.xuecheng.media.model.dto.UploadFileParamsDto;
 import com.xuecheng.media.model.dto.UploadFileResultDto;
@@ -33,12 +34,11 @@ public interface MediaFileService {
 
  MediaFiles addMediaFilesToDatabase(Long companyId, String fileMd5, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName);
 
- /**
-  * UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder()
-  *                 .bucket("testbucket")//桶名
-  *                 .filename("D:\\Download\\two.jpg")//本地文件名
-  *                 .object("test/01/two.jpg")//文件系统对象名
-  *                 .contentType(mimeType)//设置媒体文件类型
-  *                 .build();
-  */
+ public RestResponse<Boolean> checkFile(String fileMd5);
+
+ public RestResponse<Boolean> checkChunk(String fileMd5, int chunkIndex);
+
+ public RestResponse<Boolean> uploadChunk(String fileMd5,int chunk,String localChunkFilePath);
+
+ public RestResponse<Boolean> mergeChunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto uploadFileParamsDto);
 }
