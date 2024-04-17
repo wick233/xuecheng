@@ -9,10 +9,12 @@ import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.media.mapper.MediaFilesMapper;
+import com.xuecheng.media.mapper.MediaProcessMapper;
 import com.xuecheng.media.model.dto.QueryMediaParamsDto;
 import com.xuecheng.media.model.dto.UploadFileParamsDto;
 import com.xuecheng.media.model.dto.UploadFileResultDto;
 import com.xuecheng.media.model.po.MediaFiles;
+import com.xuecheng.media.model.po.MediaProcess;
 import com.xuecheng.media.service.MediaFileService;
 import io.minio.*;
 import io.minio.errors.*;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +58,9 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     @Autowired
     MediaFileService proxyService;
+
+    @Autowired
+    MediaProcessMapper mediaProcessMapper;
 
     @Value("${minio.bucket.files}")
     private String bucketFiles;
@@ -134,8 +140,28 @@ public class MediaFileServiceImpl implements MediaFileService {
                 XueChengPlusException.cast("保存文件信息失败");
             }
             log.debug("保存文件信息到数据库成功,{}", mediaFiles.toString());
+
+            //记录待处理任务
+            addWaitingTask(mediaFiles);
         }
         return mediaFiles;
+    }
+
+    private void addWaitingTask(MediaFiles mediaFiles){
+        String filename = mediaFiles.getFilename();
+        String extension = filename.substring(filename.lastIndexOf("."));
+        String mimeType = getMimeType(extension);
+        if("video/x-msvideo".equals(mimeType)){//如果是avi视频则写入待处理任务
+            MediaProcess mediaProcess = new MediaProcess();
+            BeanUtils.copyProperties(mediaFiles,mediaProcess);
+            //状态是未处理
+            mediaProcess.setStatus("1");
+            mediaProcess.setCreateDate(LocalDateTime.now());
+            mediaProcess.setFailCount(0);
+            mediaProcess.setUrl(null);
+
+            mediaProcessMapper.insert(mediaProcess);
+        }
     }
 
     @Override
@@ -214,24 +240,7 @@ public class MediaFileServiceImpl implements MediaFileService {
 
         //校验Md5
         //先从minio下载
-        File minioFile = null;
-        FileOutputStream outputStream = null;
-        try {
-            InputStream inputStream = minioClient.getObject(GetObjectArgs.builder().bucket(bucketVideo).object(mergeFilePath).build());
-            minioFile = File.createTempFile("minio",".merge");
-            outputStream = new FileOutputStream(minioFile);
-            IOUtils.copy(inputStream,outputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if(outputStream!=null){
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        File minioFile = downloadFileFromMinio(bucketVideo,mergeFilePath);
 
         if (minioFile == null){
             log.debug("下载合并后文件失败:mergeFilePath:{}",mergeFilePath);
@@ -264,6 +273,29 @@ public class MediaFileServiceImpl implements MediaFileService {
             e.printStackTrace();
         }
         return RestResponse.success(true);
+    }
+
+    @Override
+    public File downloadFileFromMinio(String bucket, String objectName) {
+        File minioFile = null;
+        FileOutputStream outputStream = null;
+        try {
+            InputStream inputStream = minioClient.getObject(GetObjectArgs.builder().bucket(bucket).object(objectName).build());
+            minioFile = File.createTempFile("minio",".merge");
+            outputStream = new FileOutputStream(minioFile);
+            IOUtils.copy(inputStream,outputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(outputStream!=null){
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return minioFile;
     }
 
     private String getChunkFileFolderPath(String fileMd5) {

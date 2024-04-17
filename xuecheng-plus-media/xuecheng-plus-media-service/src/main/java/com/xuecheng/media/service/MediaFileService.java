@@ -10,6 +10,7 @@ import com.xuecheng.media.model.po.MediaFiles;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -39,6 +40,10 @@ public interface MediaFileService {
  public RestResponse<Boolean> checkChunk(String fileMd5, int chunkIndex);
 
  public RestResponse<Boolean> uploadChunk(String fileMd5,int chunk,String localChunkFilePath);
+
+ File downloadFileFromMinio(String bucket, String objectName);
+
+ boolean addMediaFilesToMinIO(String localFilePath, String mimeType, String bucket, String objectName);
 
  public RestResponse<Boolean> mergeChunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto uploadFileParamsDto);
 }
