@@ -35,7 +35,7 @@ public class VideoTask {
     @Autowired
     MediaFileService mediaFileService;
 
-    @Value("videoprocess.ffmpegpath")
+    @Value("${videoprocess.ffmpegpath}")
     private String ffmpeg_path;
 
     @XxlJob("videoJobHandler")
@@ -47,7 +47,7 @@ public class VideoTask {
         //cpu核心数
         int processors = Runtime.getRuntime().availableProcessors();
         //查询待处理的任务
-        List<MediaProcess> mediaProcessList = mediaProcessService.selectListByShardIndex(shardIndex, shardTotal, processors);
+        List<MediaProcess> mediaProcessList = mediaProcessService.selectListByShardIndex(shardTotal, shardIndex, processors);
         int size = mediaProcessList.size();
         log.debug("去到的视频处理任务数:" + size);
         if (size <= 0) return;
@@ -77,7 +77,6 @@ public class VideoTask {
                     }
 
                     String videoPath = file.getAbsolutePath();
-                    String mp4Name = mediaProcess.getFileId() + ".mp4";
 
                     //创建一个临时文件，作为转换后的文件
                     File mp4File = null;
@@ -88,8 +87,7 @@ public class VideoTask {
                         mediaProcessService.saveProcessFinishStatus(taskId,"3",fileId,null,"创建临时文件异常");
                         return;
                     }
-                    String mp4Path = mp4File.getAbsolutePath();
-                    Mp4VideoUtil videoUtil = new Mp4VideoUtil(ffmpeg_path, videoPath, mp4Name, mp4Path);
+                    Mp4VideoUtil videoUtil = new Mp4VideoUtil(ffmpeg_path, videoPath, mp4File.getName(), mp4File.getAbsolutePath());
                     //视频转码
                     String result = videoUtil.generateMp4();
                     if (!"success".equals(result)){
@@ -98,7 +96,8 @@ public class VideoTask {
                         return;
                     }
                     //上传到minio
-                    boolean b1 = mediaFileService.addMediaFilesToMinIO(mp4File.getAbsolutePath(), "video/mp4", bucket, objectName);
+                    String mp4ObjectName = getFilePath(fileId,".mp4");
+                    boolean b1 = mediaFileService.addMediaFilesToMinIO(mp4File.getAbsolutePath(), "video/mp4", bucket, mp4ObjectName);
                     if (!b1){
                         log.debug("上传文件到minio失败,taskId：{}",taskId);
                         mediaProcessService.saveProcessFinishStatus(taskId,"3",fileId,null,"上传文件到minio失败");
@@ -124,5 +123,10 @@ public class VideoTask {
     private String getFilePathByMd5(String fileMd5,String fileExt){
         return   fileMd5.substring(0,1) + "/" + fileMd5.substring(1,2) + "/" + fileMd5 + "/" +fileMd5 +fileExt;
     }
+
+    private String getFilePath(String fileMd5,String fileExt){
+        return   fileMd5.substring(0,1) + "/" + fileMd5.substring(1,2) + "/" + fileMd5 + "/" +fileMd5 +fileExt;
+    }
+
 
 }

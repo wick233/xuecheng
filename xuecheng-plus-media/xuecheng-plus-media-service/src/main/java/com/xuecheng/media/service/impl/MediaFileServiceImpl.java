@@ -110,7 +110,6 @@ public class MediaFileServiceImpl implements MediaFileService {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            e.printStackTrace();
             log.error("上传文件到minio出错,bucket:{},objectName:{},错误原因:{}", bucket, objectName, e.getMessage(), e);
             XueChengPlusException.cast("上传文件到文件系统失败");
             return false;

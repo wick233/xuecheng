@@ -116,7 +116,7 @@ public class TeachPlanServiceImpl implements TeachPlanService {
     @Transactional
     @Override
     public void associateMedia(BindTeachPlanMediaDto bindTeachPlanMediaDto) {
-        Long teachPlanId = bindTeachPlanMediaDto.getTeachPlanId();
+        Long teachPlanId = bindTeachPlanMediaDto.getTeachplanId();
         TeachPlan teachPlan = teachPlanMapper.selectById(teachPlanId);
         if (teachPlan == null) {
             XueChengPlusException.cast("教学计划不存在");

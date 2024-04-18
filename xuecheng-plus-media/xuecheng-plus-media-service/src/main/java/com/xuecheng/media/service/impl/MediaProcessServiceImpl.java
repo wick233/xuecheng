@@ -10,6 +10,7 @@ import com.xuecheng.media.model.po.MediaProcessHistory;
 import com.xuecheng.media.service.MediaProcessService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,8 @@ import java.util.List;
  * @Date 2024/4/17 21:57
  * @Version: 1.0
  */
+
+@Service
 public class MediaProcessServiceImpl implements MediaProcessService {
 
     @Autowired
