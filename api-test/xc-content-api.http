@@ -40,6 +40,15 @@ GET {{gateway_host}}/content/course/40
 ### 课程计划查询
 GET {{content_host}}/content/teachplan/26/tree-nodes
 
+### 课程计划绑定视频
+POST {{media_host}}/media/teachplan/association/media
+Content-Type: application/json
+
+{
+  "mediaId": "",
+  "fileName": "",
+  "teachplanId": ""
+}
 
 
 <> 2024-03-12T010806.200.json

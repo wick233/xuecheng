@@ -1,7 +1,9 @@
 package com.xuecheng.content.service;
 
+import com.xuecheng.content.model.dto.BindTeachPlanMediaDto;
 import com.xuecheng.content.model.dto.SaveTeachPlanDto;
 import com.xuecheng.content.model.dto.TeachPlanDto;
+import com.xuecheng.content.model.po.TeachPlanMedia;
 
 import java.util.List;
 
@@ -15,4 +17,8 @@ public interface TeachPlanService {
     void moveUpTeachPlan(Long teachPlanId);
 
     void moveDownTeachPlan(Long teachPlanId);
+
+    void associateMedia(BindTeachPlanMediaDto bindTeachPlanMediaDto);
+
+    void disassociateMedia(String teachPlanId, String mediaId);
 }
