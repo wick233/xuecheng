@@ -275,6 +275,11 @@ public class MediaFileServiceImpl implements MediaFileService {
     }
 
     @Override
+    public MediaFiles getFileById(String mediaId){
+        return mediaFilesMapper.selectById(mediaId);
+    }
+
+    @Override
     public File downloadFileFromMinio(String bucket, String objectName) {
         File minioFile = null;
         FileOutputStream outputStream = null;

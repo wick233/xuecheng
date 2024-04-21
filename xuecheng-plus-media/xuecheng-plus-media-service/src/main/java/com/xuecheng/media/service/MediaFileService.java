@@ -46,4 +46,6 @@ public interface MediaFileService {
  boolean addMediaFilesToMinIO(String localFilePath, String mimeType, String bucket, String objectName);
 
  public RestResponse<Boolean> mergeChunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto uploadFileParamsDto);
+
+    MediaFiles getFileById(String mediaId);
 }

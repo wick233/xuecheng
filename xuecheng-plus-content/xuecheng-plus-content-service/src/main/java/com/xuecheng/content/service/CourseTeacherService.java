@@ -11,5 +11,5 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface CourseTeacherService {
-    List<CourseTeacher> getCourseTeacherList(Integer courseId);
+    List<CourseTeacher> getCourseTeacherList(Long courseId);
 }

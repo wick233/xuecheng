@@ -21,7 +21,7 @@ public class CourseTeacherServiceImpl implements CourseTeacherService {
     CourseTeacherMapper courseTeacherMapper;
 
     @Override
-    public List<CourseTeacher> getCourseTeacherList(Integer courseId) {
+    public List<CourseTeacher> getCourseTeacherList(Long courseId) {
         return courseTeacherMapper.selectList(new LambdaQueryWrapper<CourseTeacher>().eq(CourseTeacher::getCourseId, courseId));
     }
 }
