@@ -1,0 +1,88 @@
+package com.xuecheng.content.service.jobhandler;
+
+import com.xuecheng.messagesdk.model.po.MqMessage;
+import com.xuecheng.messagesdk.service.MessageProcessAbstract;
+import com.xuecheng.messagesdk.service.MqMessageService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Descriptions:
+ * @Author: Twithu
+ * @Date: 2024/4/22 下午 04:34
+ * @Version: 1.0
+ */
+@Component
+@Slf4j
+public class CoursePublishTask extends MessageProcessAbstract {
+
+    //执行课程发布的逻辑
+    @Override
+    public boolean execute(MqMessage mqMessage) {
+        //拿课程id
+        Long courseId = Long.parseLong(mqMessage.getBusinessKey1());
+
+        //课程静态化上传到minio
+
+        //向elasticsearch写索引数据
+
+        //向redis写缓存
+
+
+        return true;
+    }
+
+    //生成课程静态化页面并上传至文件系统
+    public void generateCourseHtml(MqMessage mqMessage, long courseId) {
+        Long taskId = mqMessage.getId();
+        MqMessageService mqMessageService = this.getMqMessageService();
+
+        //任务幂等性处理
+        //查询数据库取出该阶段执行状态
+        int stageOne = mqMessageService.getStageOne(taskId);
+        if (stageOne > 0) {
+            log.debug("课程静态化已处理直接返回，课程id:{}", courseId);
+            return;
+        }
+        //课程静态化处理
+
+        //保存第一阶段状态
+        mqMessageService.completedStageOne(taskId);
+
+    }
+
+
+    //写入课程索引数据
+    public void saveCourseIndex(MqMessage mqMessage, long courseId) {
+        Long taskId = mqMessage.getId();
+        MqMessageService mqMessageService = this.getMqMessageService();
+
+        //取出第二阶段
+        int stageTwo = mqMessageService.getStageTwo(taskId);
+        if (stageTwo > 0) {
+            log.debug("课程索引数据已存在，课程id:{}", courseId);
+            return;
+        }
+
+        //写入索引数据处理
+
+        //
+
+    }
+
+
+    //写入redis缓存
+    public void saveCourseCache(MqMessage mqMessage, long courseId) {
+        Long taskId = mqMessage.getId();
+        MqMessageService mqMessageService = this.getMqMessageService();
+
+        //取出第三阶段
+        int stageThree = mqMessageService.getStageThree(taskId);
+        if (stageThree > 0){
+            log.debug("redis缓存已存在，课程id:{}", courseId);
+            return;
+        }
+    }
+
+
+}
