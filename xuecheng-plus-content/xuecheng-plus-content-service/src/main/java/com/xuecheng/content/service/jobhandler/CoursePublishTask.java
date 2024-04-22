@@ -3,6 +3,8 @@ package com.xuecheng.content.service.jobhandler;
 import com.xuecheng.messagesdk.model.po.MqMessage;
 import com.xuecheng.messagesdk.service.MessageProcessAbstract;
 import com.xuecheng.messagesdk.service.MqMessageService;
+import com.xxl.job.core.context.XxlJobHelper;
+import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CoursePublishTask extends MessageProcessAbstract {
 
+    @XxlJob("CoursePublishJobHandler")
+    public void coursePublishJobHandler() throws Exception {
+        // 分片参数
+        int shardIndex = XxlJobHelper.getShardIndex();
+        int shardTotal = XxlJobHelper.getShardTotal();
+        //log.debug("shardIndex="+shardIndex+",shardTotal="+shardTotal);
+        //参数:分片序号、分片总数、消息类型、一次最多取到的任务数量、一次任务调度执行的超时时间
+        process(shardIndex,shardTotal,"course_publish",30,60);
+    }
+
+
     //执行课程发布的逻辑
     @Override
     public boolean execute(MqMessage mqMessage) {
@@ -23,7 +36,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
         Long courseId = Long.parseLong(mqMessage.getBusinessKey1());
 
         //课程静态化上传到minio
-
+        generateCourseHtml(mqMessage,courseId);
         //向elasticsearch写索引数据
 
         //向redis写缓存
@@ -45,7 +58,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
             return;
         }
         //课程静态化处理
-
+        int i = 1/0;
         //保存第一阶段状态
         mqMessageService.completedStageOne(taskId);
 
@@ -66,7 +79,8 @@ public class CoursePublishTask extends MessageProcessAbstract {
 
         //写入索引数据处理
 
-        //
+        //保存第二阶段状态
+        mqMessageService.completedStageTwo(taskId);
 
     }
 
@@ -82,6 +96,11 @@ public class CoursePublishTask extends MessageProcessAbstract {
             log.debug("redis缓存已存在，课程id:{}", courseId);
             return;
         }
+
+        //写入redis缓存处理
+
+        //保存第三阶段状态
+        mqMessageService.completedStageThree(taskId);
     }
 
 

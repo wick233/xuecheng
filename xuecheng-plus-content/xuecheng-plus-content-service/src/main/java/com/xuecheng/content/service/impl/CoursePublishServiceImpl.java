@@ -62,7 +62,7 @@ public class CoursePublishServiceImpl implements CoursePublishService {
         List<CourseTeacher> courseTeachers = courseTeacherService.getCourseTeacherList(courseId);
 
         coursePreviewDto.setCourseBase(courseBaseInfoDto);
-        coursePreviewDto.setTeachPlans(teachPlanTree);
+        coursePreviewDto.setTeachplans(teachPlanTree);
         coursePreviewDto.setCourseTeachers(courseTeachers);
         return coursePreviewDto;
     }

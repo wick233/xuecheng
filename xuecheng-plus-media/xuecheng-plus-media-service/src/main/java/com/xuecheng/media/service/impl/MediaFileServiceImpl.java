@@ -312,7 +312,7 @@ public class MediaFileServiceImpl implements MediaFileService {
 
 
     @Override
-    public UploadFileResultDto upload(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath) {
+    public UploadFileResultDto upload(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath,String objectName) {
         File file = new File(localFilePath);
         if (!file.exists()) {
             XueChengPlusException.cast("文件不存在");
@@ -323,8 +323,9 @@ public class MediaFileServiceImpl implements MediaFileService {
         String mimeType = getMimeType(extension);
         String fileMd5 = getFileMd5(file);
         String defaultFolderPath = getDefaultFolderPath();
-        String objectName = defaultFolderPath + fileMd5 + extension;
-
+        if (StringUtils.isEmpty(objectName)) {//没传，则使用默认年月日
+            objectName = defaultFolderPath + fileMd5 + extension;
+        }
         //文件上传到minio
         addMediaFilesToMinIO(localFilePath, mimeType, bucketFiles, objectName);
         uploadFileParamsDto.setFileSize(file.length());

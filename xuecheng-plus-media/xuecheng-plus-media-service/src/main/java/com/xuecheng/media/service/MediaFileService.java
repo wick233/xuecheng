@@ -31,7 +31,7 @@ public interface MediaFileService {
  */
  PageResult<MediaFiles> queryMediaFiles(Long companyId,PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
 
- UploadFileResultDto upload(Long companyId, UploadFileParamsDto uploadFileParamsDto,String localFilePath);
+ UploadFileResultDto upload(Long companyId, UploadFileParamsDto uploadFileParamsDto,String localFilePath,String objectName);
 
  MediaFiles addMediaFilesToDatabase(Long companyId, String fileMd5, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName);
 
