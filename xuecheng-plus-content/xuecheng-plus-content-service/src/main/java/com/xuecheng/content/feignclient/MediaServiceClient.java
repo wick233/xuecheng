@@ -10,10 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @FeignClient(value = "media-api",configuration = MultipartSupportConfig.class,fallbackFactory = MediaServiceClientFallbackFactory.class)
 public interface MediaServiceClient {
-    //@RequestMapping(value = "/upload/coursefile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    //    public UploadFileResultDto upload(@RequestPart("filedata")MultipartFile filedata,
-    //                                      @RequestParam(value= "objectName",required=false) String objectName
-
     @RequestMapping(value = "/media/upload/coursefile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String upload(@RequestPart("filedata") MultipartFile filedata,
                                       @RequestParam(value= "objectName",required=false) String objectName);
