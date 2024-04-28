@@ -1,6 +1,11 @@
 package com.xuecheng.content.service.jobhandler;
 
 import com.xuecheng.base.exception.XueChengPlusException;
+import com.xuecheng.content.feignclient.CourseIndex;
+import com.xuecheng.content.feignclient.SearchServiceClient;
+import com.xuecheng.content.mapper.CoursePublishMapper;
+import com.xuecheng.content.model.dto.CoursePreviewDto;
+import com.xuecheng.content.model.po.CoursePublish;
 import com.xuecheng.content.service.CoursePublishService;
 import com.xuecheng.messagesdk.model.po.MqMessage;
 import com.xuecheng.messagesdk.service.MessageProcessAbstract;
@@ -8,6 +13,7 @@ import com.xuecheng.messagesdk.service.MqMessageService;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +31,10 @@ public class CoursePublishTask extends MessageProcessAbstract {
 
     @Autowired
     CoursePublishService coursePublishService;
+    @Autowired
+    SearchServiceClient searchServiceClient;
+    @Autowired
+    CoursePublishMapper coursePublishMapper;
 
 
     @XxlJob("CoursePublishJobHandler")
@@ -47,7 +57,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
         //课程静态化上传到minio
         generateCourseHtml(mqMessage,courseId);
         //向elasticsearch写索引数据
-
+        saveCourseIndex(mqMessage,courseId);
         //向redis写缓存
 
 
@@ -95,6 +105,15 @@ public class CoursePublishTask extends MessageProcessAbstract {
         }
 
         //写入索引数据处理
+        CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+        CourseIndex courseIndex = new CourseIndex();
+        BeanUtils.copyProperties(coursePublish,courseIndex);
+
+        //远程调用
+        Boolean add = searchServiceClient.add(courseIndex);
+        if (!add){
+            XueChengPlusException.cast("添加索引失败");
+        }
 
         //保存第二阶段状态
         mqMessageService.completedStageTwo(taskId);

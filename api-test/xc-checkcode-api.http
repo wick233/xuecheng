@@ -1,0 +1,6 @@
+### 申请验证码
+POST {{checkcode_host}}/checkcode/pic
+
+### 校验验证码
+POST {{checkcode_host}}/checkcode/verify?key=checkcode:bec87c4579d641fc8be4ec4fb2f61115&code=7alk
+
