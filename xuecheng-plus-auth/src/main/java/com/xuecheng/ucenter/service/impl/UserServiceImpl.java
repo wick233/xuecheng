@@ -1,11 +1,10 @@
 package com.xuecheng.ucenter.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xuecheng.ucenter.mapper.XcMenuMapper;
 import com.xuecheng.ucenter.mapper.XcUserMapper;
 import com.xuecheng.ucenter.model.dto.AuthParamsDto;
 import com.xuecheng.ucenter.model.dto.XcUserExt;
-import com.xuecheng.ucenter.model.po.XcUser;
 import com.xuecheng.ucenter.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Description
@@ -28,6 +29,9 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     XcUserMapper xcUserMapper;
+
+    @Autowired
+    XcMenuMapper xcMenuMapper;
 
     @Autowired//spring容器
     ApplicationContext applicationContext;
@@ -54,9 +58,10 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     public UserDetails getUserPrincipal(XcUserExt xcUser){
-        //String password = xcUser.getPassword();
         //加权限封装
-        String[] authorities = {"test"};
+        List<String> permissions = xcMenuMapper.selectPermissionByUserId(xcUser.getId());
+        String[] authorities = (String[]) permissions.toArray();
+
         //清除用户敏感数据后，封装成json
         xcUser.setPassword(null);
         String userJson = JSON.toJSONString(xcUser);

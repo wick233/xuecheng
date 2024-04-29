@@ -3,9 +3,10 @@ package com.xuecheng.content.api;
 import com.xuecheng.base.exception.ValidationGroups;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
+import com.xuecheng.base.utils.StringUtil;
 import com.xuecheng.content.model.dto.AddCourseDto;
-import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.CourseBaseInfoDto;
+import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.service.CourseBaseInfoService;
@@ -13,7 +14,6 @@ import com.xuecheng.content.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +34,14 @@ public class CourseBaseInfoController {
     @ApiOperation("课程列表分页查询")
     @PostMapping("/course/list")
     public PageResult<CourseBase> list(PageParams pageParams,@RequestBody(required = false) QueryCourseParamDto queryCourseParamDto){
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
 
-        return courseBaseInfoService.queryCourseBaseList(pageParams, queryCourseParamDto);
+        Long companyId = null;
+        if (!StringUtil.isEmpty(user.getCompanyId())){
+            companyId = Long.parseLong(user.getCompanyId());
+        }
+
+        return courseBaseInfoService.queryCourseBaseList(companyId,pageParams, queryCourseParamDto);
     }
 
     @ApiOperation("新增课程基础")

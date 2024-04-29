@@ -28,7 +28,7 @@ public class ContentTest {
         QueryCourseParamDto dto = new QueryCourseParamDto("202004", "java", "203001");
         PageParams pageParams = new PageParams(1L, 3L);
 
-        PageResult<CourseBase> result = courseBaseInfoService.queryCourseBaseList(pageParams, dto);
+        PageResult<CourseBase> result = courseBaseInfoService.queryCourseBaseList(null,pageParams, dto);
         System.out.println(result);
     }
 
