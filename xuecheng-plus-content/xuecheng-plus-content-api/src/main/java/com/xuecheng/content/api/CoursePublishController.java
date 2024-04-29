@@ -1,6 +1,8 @@
 package com.xuecheng.content.api;
 
+import com.xuecheng.content.mapper.CoursePublishMapper;
 import com.xuecheng.content.model.dto.CoursePreviewDto;
+import com.xuecheng.content.model.po.CoursePublish;
 import com.xuecheng.content.service.CoursePublishService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +26,8 @@ public class CoursePublishController {
 
     @Autowired
     CoursePublishService coursePublishService;
+    @Autowired
+    CoursePublishMapper coursePublishMapper;
 
     @GetMapping("/coursepreview/{courseId}")
     public ModelAndView preview(@PathVariable("courseId") Long courseId) {
@@ -52,6 +56,13 @@ public class CoursePublishController {
     public void coursepublish(@PathVariable("courseId") Long courseId) {
         Long companyId = 1232141425L;
         coursePublishService.publish(companyId, courseId);
+    }
+
+    @ApiOperation("查询课程发布信息")
+    @ResponseBody
+    @GetMapping("/r/coursepublish/{courseId}")
+    public CoursePublish getCoursepublish(@PathVariable("courseId") Long courseId) {
+        return coursePublishMapper.selectById(courseId);
     }
 
 

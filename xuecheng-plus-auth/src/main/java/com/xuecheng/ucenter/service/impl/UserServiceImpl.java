@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserDetailsService {
     public UserDetails getUserPrincipal(XcUserExt xcUser){
         //加权限封装
         List<String> permissions = xcMenuMapper.selectPermissionByUserId(xcUser.getId());
-        String[] authorities = (String[]) permissions.toArray();
+        String[] authorities = permissions.toArray(new String[0]);
 
         //清除用户敏感数据后，封装成json
         xcUser.setPassword(null);
