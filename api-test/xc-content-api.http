@@ -60,7 +60,8 @@ Content-Type: application/json
 GET {{content_host}}/content/courseTeacher/list/1
 
 ### 查询课程发布信息
-GET {{content_host}}/content/r/coursepublish/2
+GET 192.168.101.1:53040/content/r/coursepublish/2
+
 
 
 <> 2024-03-12T010806.200.json
