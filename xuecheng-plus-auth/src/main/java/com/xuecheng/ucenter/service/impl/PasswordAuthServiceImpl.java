@@ -36,14 +36,14 @@ public class PasswordAuthServiceImpl implements AuthService {
         String checkCode = authParamsDto.getCheckcode();
         String checkCodeKey = authParamsDto.getCheckcodekey();
 
-        if (StringUtils.isEmpty(checkCode) || StringUtils.isEmpty(checkCodeKey)){
-            throw  new RuntimeException("请输入验证码");
-        }
-        //todo:校验验证码
-        Boolean verify = checkCodeClient.verify(checkCodeKey, checkCode);
-        if (verify==null || !verify){
-            throw  new RuntimeException("验证码输入错误");
-        }
+        //if (StringUtils.isEmpty(checkCode) || StringUtils.isEmpty(checkCodeKey)){
+        //    throw  new RuntimeException("请输入验证码");
+        //}
+        ////todo:校验验证码
+        //Boolean verify = checkCodeClient.verify(checkCodeKey, checkCode);
+        //if (verify==null || !verify){
+        //    throw  new RuntimeException("验证码输入错误");
+        //}
 
         //根据username账号查询数据库
         XcUser xcUser = xcUserMapper.selectOne(new LambdaQueryWrapper<XcUser>().eq(XcUser::getUsername, username));

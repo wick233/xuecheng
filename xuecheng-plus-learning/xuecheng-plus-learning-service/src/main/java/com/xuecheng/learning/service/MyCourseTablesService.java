@@ -12,4 +12,6 @@ import com.xuecheng.learning.model.dto.XcCourseTablesDto;
 public interface MyCourseTablesService {
     public XcChooseCourseDto addChooseCourse(String userId, Long courseId);
     XcCourseTablesDto getLearningStatus(String userId, Long courseId);
+
+    boolean saveChooseCourseStatus(String chooseCourseId);
 }

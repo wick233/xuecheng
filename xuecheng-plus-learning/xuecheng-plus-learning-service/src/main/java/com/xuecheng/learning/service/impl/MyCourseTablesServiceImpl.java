@@ -99,6 +99,30 @@ public class MyCourseTablesServiceImpl implements MyCourseTablesService {
 
     }
 
+    @Override
+    public boolean saveChooseCourseStatus(String chooseCourseId) {
+        XcChooseCourse chooseCourse = chooseCourseMapper.selectById(chooseCourseId);
+        if (chooseCourse == null){
+            log.debug("接收到购买课程的信息，根据选课id从数据库找不到选课记录:{}",chooseCourseId);
+            return false;
+        }
+        //选课状态
+        String status = chooseCourse.getStatus();
+        if ("701002".equals(status)){//如果是未支付
+            chooseCourse.setStatus("701001");
+            int i = chooseCourseMapper.updateById(chooseCourse);
+            if (i<=0){
+                log.debug("更新选课记录失败");
+                XueChengPlusException.cast("更新选课记录失败");
+            }
+            //向我的课程表写入
+            XcCourseTables xcCourseTables = addCourseTables(chooseCourse);
+
+        }
+
+        return true;
+    }
+
 
     //添加免费课程,免费课程加入选课记录表、我的课程表
     public XcChooseCourse addFreeCourse(String userId, CoursePublish coursepublish) {

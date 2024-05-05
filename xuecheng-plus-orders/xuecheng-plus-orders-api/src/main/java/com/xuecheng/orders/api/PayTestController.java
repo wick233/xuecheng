@@ -50,11 +50,11 @@ public class PayTestController {
                 AlipayConfig.URL, APP_ID, APP_PRIVATE_KEY, AlipayConfig.FORMAT, AlipayConfig.CHARSET, ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE); //获得初始化的AlipayClient
         AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();//创建API对应的request
         //alipayRequest.setReturnUrl("http://domain.com/CallBack/return_url.jsp");
-        alipayRequest.setNotifyUrl("http://tjxt-user-t.itheima.net/xuecheng/orders/paynotify");//在公共参数中设置回跳和通知地址
+        //alipayRequest.setNotifyUrl("http://8vmjmc.natappfree.cc/orders/payNotifyTest");//在公共参数中设置回跳和通知地址
         alipayRequest.setBizContent("{" +
-                "    \"out_trade_no\":\"202403200101777101\"," +
+                "    \"out_trade_no\":\"202403200101777106\"," +
                 "    \"total_amount\":200," +
-                "    \"subject\":\"Apple\"," +
+                "    \"subject\":\"Have a good day\"," +
                 "    \"product_code\":\"QUICK_WAP_WAY\"" +
                 "  }");//填充业务参数
         String form = alipayClient.pageExecute(alipayRequest).getBody(); //调用SDK生成表单
@@ -65,7 +65,7 @@ public class PayTestController {
 
 
     //接收通知
-    @PostMapping("/paynotify")
+    @PostMapping("/payNotifyTest")
     public void paynotify(HttpServletRequest request, HttpServletResponse response) throws IOException, AlipayApiException {
         Map<String, String> params = new HashMap<String, String>();
         Map requestParams = request.getParameterMap();

@@ -22,7 +22,7 @@ public class QRCodeUtil {
 
     public static void main(String[] args) throws IOException {
         QRCodeUtil qrCodeUtil = new QRCodeUtil();
-        System.out.println(qrCodeUtil.createQRCode("http://t4q69r.natappfree.cc/orders/alipaytest",200,200));
+        System.out.println(qrCodeUtil.createQRCode("http://dhnb5n.natappfree.cc/orders/alipaytest",200,200));
     }
     /**
      * 生成二维码
