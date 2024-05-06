@@ -9,10 +9,10 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xuecheng.base.exception.XueChengPlusException;
-import com.xuecheng.base.utils.QRCodeUtil;
 import com.xuecheng.messagesdk.model.po.MqMessage;
 import com.xuecheng.messagesdk.service.MqMessageService;
 import com.xuecheng.orders.config.AlipayConfig;
+import com.xuecheng.orders.config.IdWorkerUtils;
 import com.xuecheng.orders.config.PayNotifyConfig;
 import com.xuecheng.orders.mapper.XcOrdersGoodsMapper;
 import com.xuecheng.orders.mapper.XcOrdersMapper;
@@ -24,9 +24,7 @@ import com.xuecheng.orders.model.po.XcOrders;
 import com.xuecheng.orders.model.po.XcOrdersGoods;
 import com.xuecheng.orders.model.po.XcPayRecord;
 import com.xuecheng.orders.service.OrderService;
-import com.xuecheng.orders.config.IdWorkerUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.core.MessageDeliveryMode;
@@ -38,7 +36,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +47,6 @@ import java.util.Map;
  * @Date 2024/5/1 21:08
  * @Version: 1.0
  */
-
 @Service
 @Slf4j
 public class OrderServiceImpl implements OrderService {
@@ -79,37 +75,11 @@ public class OrderServiceImpl implements OrderService {
     String qrCodeUrl;
 
 
+
     @Override
     @Transactional
     public PayRecordDto createOrder(String userId, AddOrderDto addOrderDto) {
-
-        //添加商品订单
-        XcOrders xcOrders = saveXcOrders(userId, addOrderDto);
-        if (xcOrders == null){
-            XueChengPlusException.cast("订单创建失败");
-        }
-        if(xcOrders.getStatus().equals("600002")){
-            XueChengPlusException.cast("订单已支付");
-        }
-
-        //添加支付交易记录
-        //生成支付记录
-        XcPayRecord payRecord = createPayRecord(xcOrders);
-
-        //生成二维码
-        String qrCode = null;
-        try {
-            //url要可以被外网访问到，url为下单接口(稍后定义)
-            String url = String.format(qrCodeUrl, payRecord.getPayNo());
-            qrCode = new QRCodeUtil().createQRCode(url, 200, 200);
-        } catch (IOException e) {
-            XueChengPlusException.cast("生成二维码出错");
-        }
-        PayRecordDto payRecordDto = new PayRecordDto();
-        BeanUtils.copyProperties(payRecord,payRecordDto);
-        payRecordDto.setQrcode(qrCode);
-
-        return payRecordDto;
+        return null;
     }
 
     //根据业务id查询订单
