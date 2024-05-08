@@ -265,6 +265,7 @@ public class OrderServiceImpl implements OrderService {
             }
         },ex -> {
             //发生异常的处理
+            log.error("消息发送异常, ID:{}, 原因{}",correlationData.getId(),ex.getMessage());
 
         });
 
