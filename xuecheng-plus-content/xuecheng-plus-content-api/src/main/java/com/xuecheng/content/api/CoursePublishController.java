@@ -82,7 +82,7 @@ public class CoursePublishController {
         }
 
         //课程基本信息
-        CourseBaseInfoDto courseBase = new CourseBaseInfoDto();
+        CourseBaseInfoDto courseBase = new  CourseBaseInfoDto();
         BeanUtils.copyProperties(coursePublish, courseBase);
         //课程计划
         List<TeachPlanDto> teachplans = JSON.parseArray(coursePublish.getTeachplan(), TeachPlanDto.class);

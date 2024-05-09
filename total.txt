@@ -16,3 +16,6 @@
 技术选型：项目采用前后端分离的技术架构，后端使用SpringCloud技术栈构建微服务。数据库采用MySQL；连接数据库的框架采用MyBatis-Plus；网关采用SpringCloud Gateway；服务注册中心采用Nacos，同时用来统一管理配置文件；微服务间远程调用采用Feign；消息队列采用RabbitMQ；任务调度器采用xxl-job；搜索功能采用ElasticSearch；缓存采用Redis数据库；文件存储采用MinIO文件系统。
 
 踏实好学，热爱编程，下班后会自主了解学习Java相关技术。
+
+熟悉Java语法和基本知识。
+熟悉HTML、CSS、JavaScript、Vue框架
